@@ -32,8 +32,6 @@ var dateAndTime = (function() {
 // ===================================
 var plannerApp = (function() {
 
-    let taskBoxes = $("textarea");
-
     // Updates the header's date
     function _updateDate () {
         $("#currentDay").text(dateAndTime.getDate());
@@ -45,9 +43,9 @@ var plannerApp = (function() {
 
         $("textarea").each(
             function(i) {
-                if (i < hour - 9) {
+                if (i < (hour - 9)) {
                     $(this).removeClass("present future").addClass("past");
-                } else if (i == hour - 9) {
+                } else if (i == (hour - 9)) {
                     $(this).removeClass("past future").addClass("present");
                 } else {
                     $(this).removeClass("past present").addClass("future");
@@ -56,12 +54,23 @@ var plannerApp = (function() {
         );
     }
 
+    function _saveItem() {
+        let item = $(this).siblings("textarea").val();
+        console.log(item);
+    }
+
+    function _clickHandler() {
+        $(".saveBtn").click(_saveItem);
+    }
+
+    // initializes the planner module
     function init() {
         _updateDate();
         _colorizeTasks();
-        console.log(taskBoxes);
+        _clickHandler();
     }
 
+    // expose the planner module's opening function
     return {
         init: init
     }
@@ -83,4 +92,5 @@ var storeManager = (function() {
 // -----------------------------------
 // Runs on load
 // ===================================
+
 plannerApp.init();
