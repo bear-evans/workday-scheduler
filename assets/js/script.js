@@ -5,16 +5,19 @@
 // ===================================
 var dateAndTime = (function() {
     
+    // Simple function to return the current date
     function getDate() {
         let date = moment().format('MMMM Do YYYY');
         return date;
     }
 
+    // Simple function to return the current hour
     function getHour() {
         let hour = moment().format('HH');
         return hour;
     }
 
+    // Expose current date and hour for use
     return {
         getDate : getDate,
         getHour : getHour
@@ -29,14 +32,34 @@ var dateAndTime = (function() {
 // ===================================
 var plannerApp = (function() {
 
-    let headerDate = document.getElementById("currentDay");
+    let taskBoxes = $("textarea");
 
-    function updateDate () {
-        headerDate.textContent = dateAndTime.getDate();
+    // Updates the header's date
+    function _updateDate () {
+        $("#currentDay").text(dateAndTime.getDate());
+    }
+
+    // Cycles through all text boxes, changing their colors
+    function _colorizeTasks () {
+        let hour = dateAndTime.getHour();
+
+        $("textarea").each(
+            function(i) {
+                if (i < hour - 9) {
+                    $(this).removeClass("present future").addClass("past");
+                } else if (i == hour - 9) {
+                    $(this).removeClass("past future").addClass("present");
+                } else {
+                    $(this).removeClass("past present").addClass("future");
+                }    
+            }
+        );
     }
 
     function init() {
-        updateDate();
+        _updateDate();
+        _colorizeTasks();
+        console.log(taskBoxes);
     }
 
     return {
