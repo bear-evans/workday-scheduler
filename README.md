@@ -1,6 +1,6 @@
 # Workday Scheduler
 
-![screenshot](SCREENSHOT HERE)
+![screenshot](assets/Screenshot.jpg)
 
 ## About This Project
 
