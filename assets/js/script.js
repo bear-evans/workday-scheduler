@@ -37,6 +37,11 @@ var plannerApp = (function() {
         $("#currentDay").text(dateAndTime.getDate());
     }
 
+    // Adds event listeners
+    function _clickHandler() {
+        $(".saveBtn").click(_saveItem);
+    }
+
     // Cycles through all text boxes, changing their colors
     function _colorizeTasks () {
         let hour = dateAndTime.getHour();
@@ -49,23 +54,38 @@ var plannerApp = (function() {
                     $(this).removeClass("past future").addClass("present");
                 } else {
                     $(this).removeClass("past present").addClass("future");
-                }    
+                }
             }
         );
     }
 
+    // Saves items when save button is clicked
     function _saveItem() {
         let item = $(this).siblings("textarea").val();
-        console.log(item);
+
+        // don't process blank slots
+        if (item === "") {
+            return;
+        }
+
+        // convert the index based on the time offset (9 AM = 0)
+        let index = $(this).parent().attr("id") - 9; // the magic of loosley typed languages
+        storeManager.saveData(index, item);
     }
 
-    function _clickHandler() {
-        $(".saveBtn").click(_saveItem);
+    // Loads tasks from memory and sets the textboxes to their values
+    function _loadTasks() {
+        let taskBox = $("textarea");
+        for (var i = 0; i < taskBox.length; i++) {
+            taskBox[i].textContent = storeManager.loadData(i);
+        }
     }
+
 
     // initializes the planner module
     function init() {
         _updateDate();
+        _loadTasks();
         _colorizeTasks();
         _clickHandler();
     }
@@ -85,6 +105,23 @@ var plannerApp = (function() {
 // ===================================
 var storeManager = (function() {
 
+    // loads the value of they provided key
+    // key is a base 0 index adjusted for the time offset (9 AM = 0)
+    function loadData(key) {
+        let value = JSON.parse(localStorage.getItem(key));
+        return value;
+    }
+
+    // Stores task data based on the provided key
+    function saveData(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    // Exposed the save and load interfaces
+    return {
+        loadData: loadData,
+        saveData: saveData
+    }
 })();
 
 /// ==================================
