@@ -105,7 +105,7 @@ var plannerApp = (function() {
 // ===================================
 var storeManager = (function() {
 
-    // loads the value of they provided key
+    // loads the value of the provided key
     // key is a base 0 index adjusted for the time offset (9 AM = 0)
     function loadData(key) {
         let value = JSON.parse(localStorage.getItem(key));
